@@ -73,11 +73,21 @@ class BookshelfViewController: UITableViewController {
     }
 
     private func refreshData() {
+        
         let fileManager = FileManager.default
-        let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let contents = try! fileManager.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-        documents = contents.flatMap { PDFDocument(url: $0) }
-
+        let resourcePath = Bundle.main.resourcePath!
+        let bundleDir = try? fileManager.contentsOfDirectory(atPath: resourcePath)
+        
+        let pdfs = bundleDir?.filter({
+            $0.hasSuffix(".pdf")
+        })
+        
+        let d = pdfs?.map({ (s) -> PDFDocument in
+            let url = URL(fileURLWithPath: resourcePath).appendingPathComponent(s)
+            return PDFDocument(url: url)!
+        }) ?? []
+        
+        documents = d
         tableView.reloadData()
     }
 

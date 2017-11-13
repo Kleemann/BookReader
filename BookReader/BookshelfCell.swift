@@ -42,5 +42,7 @@ class BookshelfCell: UITableViewCell {
 
     override func prepareForReuse() {
         thumbnailImageView.image = nil
+        titleLabel.text = ""
+        authorLabel.text = ""
     }
 }
